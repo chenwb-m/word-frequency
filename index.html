@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Worl Frequency Counter</title>
+    <script src="static/js/jquery-3.3.1.min.js"></script>
+    <style>
+    </style>
+  </head>
+  <body>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <p>上传xlsx文件</p>
+      <input type="file" name="file" id="upload" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+    </form>
+  </body>
+  <script type="application/javascript">
+    $(function () {
+      $('#upload').change(function (e) {
+        $.ajax({
+            url: '/upload',
+            type: 'POST',
+            cache: false,
+            data: new FormData($('#uploadForm')[0]),
+            processData: false,
+            contentType: false
+        }).done(function(res) {
+          // console.log(res)
+          if (res.indexOf('./upload') === 0) {
+            window.open(res)
+          } else {
+            alert(res)
+          }
+          e.target.value = null
+        }).fail(function(error) {
+          alert(error)
+          console.error(error.toString())
+          e.target.value = null
+        });
+      })
+
+      // $('#upload').change(function (e) {
+      //   console.log(e.target)
+      //
+      // })
+    })
+  </script>
+</html>
