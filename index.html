@@ -6,18 +6,72 @@
     <title>Worl Frequency Counter</title>
     <script src="static/js/jquery-3.3.1.min.js"></script>
     <style>
+      html, body {
+        width: 100%;
+        height: 100%;
+        padding: 0px;
+        margin: 0px;
+        position: relative;
+      }
+
+      .content {
+        position: absolute;
+        padding: 20px;
+      }
+
+      .loader {
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: gray;
+        opacity: 0.3;
+      }
+      .loader-inner {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        left: 50%;
+        top: 50%;
+        margin-left: -60px;
+        margin-top: -60px;
+        border: 16px solid #f3f3f3; /* Light grey */
+        border-top: 16px solid #3498db; /* Blue */
+        border-radius: 50%;
+        animation: spin 2s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
     </style>
   </head>
   <body>
-    <form id="uploadForm" enctype="multipart/form-data">
-      <p>上传xlsx文件</p>
-      <input type="file" name="file" id="upload" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
-    </form>
+    <div class="content">
+      <form id="uploadForm" enctype="multipart/form-data">
+        <p>上传xlsx文件：</p>
+        <input type="file" name="file" id="upload" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+      </form>
+      <br />
+      <br />
+      <div id="result">
+        结果下载：
+        <br />
+
+      </div>
+    </div>
+    <div class="loader" id="loader" style="display: none;">
+      <div class="loader-inner"></div>
+    </div>
   </body>
   <script type="application/javascript">
+    var loader = $('#loader')
+    var result = $('#result')
     $(function () {
       $('#upload').change(function (e) {
         if (e.target.files.length > 0) {
+          loader.css('display', 'block')
           $.ajax({
               url: '/upload',
               type: 'POST',
@@ -26,14 +80,18 @@
               processData: false,
               contentType: false
           }).done(function(res) {
+            loader.css('display', 'none')
             // console.log(res)
             if (res.indexOf('./upload') === 0) {
-              window.open(res)
+              // confirm('处理完成，点击下载结果')
+              // window.open(res)
+              result.append('<a href="' + res + '">'+res+'</a><br />')
             } else {
               alert(res)
             }
             e.target.value = null
           }).fail(function(error) {
+            loader.css('display', 'none')
             alert(error)
             console.error(error.toString())
             e.target.value = null
