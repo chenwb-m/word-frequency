@@ -17,26 +17,28 @@
   <script type="application/javascript">
     $(function () {
       $('#upload').change(function (e) {
-        $.ajax({
-            url: '/upload',
-            type: 'POST',
-            cache: false,
-            data: new FormData($('#uploadForm')[0]),
-            processData: false,
-            contentType: false
-        }).done(function(res) {
-          // console.log(res)
-          if (res.indexOf('./upload') === 0) {
-            window.open(res)
-          } else {
-            alert(res)
-          }
-          e.target.value = null
-        }).fail(function(error) {
-          alert(error)
-          console.error(error.toString())
-          e.target.value = null
-        });
+        if (e.target.files.length > 0) {
+          $.ajax({
+              url: '/upload',
+              type: 'POST',
+              cache: false,
+              data: new FormData($('#uploadForm')[0]),
+              processData: false,
+              contentType: false
+          }).done(function(res) {
+            // console.log(res)
+            if (res.indexOf('./upload') === 0) {
+              window.open(res)
+            } else {
+              alert(res)
+            }
+            e.target.value = null
+          }).fail(function(error) {
+            alert(error)
+            console.error(error.toString())
+            e.target.value = null
+          });
+        }
       })
 
       // $('#upload').change(function (e) {
