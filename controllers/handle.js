@@ -153,15 +153,16 @@ module.exports = async function (req, res) {
             }
           }
           keyObjectCounter[v].count += 1
-          keyObjectCounter[v].rows.push(row + 1)
+          keyObjectCounter[v].rows.push(parseInt(row) + 1)
         }
       }
     }
     var range = Object.values(keyObjectCounter).sort((a, b) => a.count > b.count ? -1 : 1)
-    var exportData = [['关键词', '频率']]
+    var exportData = [['关键词', '频率', '出现行号']]
     range.forEach((row) => {
-      exportData.push([row.key, row.count])
+      exportData.push([row.key, row.count, row.rows.join(', ')])
     })
+    // console.log(exportData)
     // 导出
     var outname = ''
     try {
